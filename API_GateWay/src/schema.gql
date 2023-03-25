@@ -1,0 +1,94 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type ProductObjType {
+  id: String!
+  title: String!
+  main_image: String!
+  secodary_images: [String!]!
+  description: String!
+  price: String!
+  created_at: String!
+}
+
+type AddressObjectType {
+  id: String!
+  address: String!
+  city: String!
+  state: String!
+  postal_code: String!
+  country: String!
+}
+
+type UserObjType {
+  id: String!
+  name: String!
+  email: String!
+  address: [AddressObjectType!]!
+}
+
+type RegisterAddressObjType {
+  id: String!
+  address: String!
+  city: String!
+  state: String!
+  postal_code: String!
+  country: String!
+  user: UserObjType!
+}
+
+type RegisterUserObjType {
+  user: UserObjType!
+  token: String!
+}
+
+type AuthObjType {
+  user: UserObjType!
+  token: String!
+}
+
+type Query {
+  hello: String!
+  getAllProducts: [ProductObjType!]!
+  getProductById(id: String!): ProductObjType!
+  auth: String!
+  getOneUserByEmail(email: String!): UserObjType!
+  getUserInformations: UserObjType!
+  getAllAddressByUserId(user_id: String!): [RegisterAddressObjType!]!
+  recoverUserInformations: UserObjType!
+}
+
+type Mutation {
+  registerProduct(product: RegisterProductDTO!): ProductObjType!
+  registerUser(user: RegisterUserInputType!): RegisterUserObjType!
+  registerAddress(address: RegisterAddressInputType!): RegisterAddressObjType!
+  signIn(user: AuthInputType!): AuthObjType!
+}
+
+input RegisterProductDTO {
+  title: String!
+  main_image: String!
+  secondary_images: [String!]!
+  description: String!
+  price: Float!
+}
+
+input RegisterUserInputType {
+  name: String!
+  email: String!
+  password: String!
+}
+
+input RegisterAddressInputType {
+  address: String!
+  city: String!
+  state: String!
+  postal_code: String!
+  country: String!
+}
+
+input AuthInputType {
+  email: String!
+  password: String!
+}

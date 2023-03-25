@@ -1,0 +1,194 @@
+version: "3"
+
+services:
+  frontend:
+    container_name: FrontEnd
+    build: 
+      context: ./FrontEnd
+      dockerfile: Dockerfile
+    volumes:
+      - ./FrontEnd:/app
+    ports:
+      - "3001:3001"
+    depends_on:
+      - api_gateway
+    networks:
+      - gymnetwork
+
+  api_gateway:
+    container_name: API_gateway
+    build: 
+      context: API_GateWay
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./API_GateWay:/app
+    networks:
+      - gymnetwork
+    depends_on:
+      - kafka
+      - user_ms
+      - product_ms
+      - payment_ms
+
+  user_ms:
+    container_name: user_ms
+    build:
+      context: ./microservices/User
+      dockerfile: Dockerfile
+    volumes:
+      - ./microservices/User:/app
+    networks:
+      - gymnetwork
+    depends_on:
+      - user_gym_database
+      - kafka
+      - zookeeper
+
+  product_ms:
+    container_name: product_ms
+    build:
+      context: ./microservices/Product
+      dockerfile: Dockerfile
+    volumes:
+      - ./microservices/Product:/app
+    networks:
+      - gymnetwork
+    depends_on:
+      - product_gym_database
+      - kafka
+      - zookeeper
+
+  payment_ms:
+    container_name: payment_ms
+    build: 
+      context: ./microservices/Payment
+      dockerfile: Dockerfile
+    volumes:
+      - './microservices/Payment:/app'
+    networks:
+      - gymnetwork
+  
+    depends_on:
+      - kafka
+      - payment_gym_database
+
+  user_gym_database:
+    container_name: user_gym_database
+    image: postgres
+    environment:
+      POSTGRES_DB: ${USER_DATABASE_DB}
+      POSTGRES_USER: ${USER_DATABASE_USER}
+      POSTGRES_PASSWORD: ${USER_DATABASE_PASSWORD}
+    ports:
+      - ${USER_DATABASE_LOCALHOST_PORT}:${USER_DATABASE_PORT}
+    volumes:
+      - .:/usr/app/postgres/pgdata
+    networks:
+      - gymnetwork
+
+  product_gym_database:
+    container_name: product_gym_database
+    image: postgres
+    environment:
+      POSTGRES_DB: ${PRODUCT_DATABASE_DB}
+      POSTGRES_USER: ${PRODUCT_DATABASE_USER}
+      POSTGRES_PASSWORD: ${PRODUCT_DATABASE_PASSWORD}
+    ports:
+      - ${PRODUCT_DATABASE_LOCALHOST_PORT}:${PRODUCT_DATABASE_PORT}
+    volumes:
+      - .:/usr/app/postgres/pgdata
+    networks:
+      - gymnetwork
+
+  payment_gym_database:
+    container_name: payment_gym_database
+    image: postgres
+    environment:
+      POSTGRES_DB: ${PAYMENT_DATABASE_DB}
+      POSTGRES_USER: ${PAYMENT_DATABASE_USER}
+      POSTGRES_PASSWORD: ${PAYMENT_DATABASE_PASSWORD}
+    command: 'npm run migrate:run'
+    ports:
+      - ${PAYMENT_DATABASE_LOCALHOST_PORT}:${PAYMENT_DATABASE_PORT}
+    volumes:
+      - .:/usr/app/postgres/pgdata
+    networks:
+      - gymnetwork
+    
+  zookeeper:
+    image: 'docker.io/bitnami/zookeeper:3-debian-10'
+    networks:
+      - gymnetwork
+    ports:
+      - '2181:2181'
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+      
+  kafka:
+    image: 'docker.io/bitnami/kafka:2-debian-10'
+    container_name: kafka_service
+    ports:
+      - '9092:9092'
+    depends_on:
+      - zookeeper
+    environment:
+      - KAFKA_BROKER_ID=1
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka_service:9092
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+      - ALLOW_PLAINTEXT_LISTENER=yes
+      - KAFKA_ADVERTISED_HOST_NAME=kafka-internal.io
+    networks:
+      - gymnetwork
+
+  kafka_manager:
+    container_name: kafka_manager
+    image: provectuslabs/kafka-ui:latest
+
+    ports:
+      - 8080:8080
+
+    environment:
+      - KAFKA_CLUSTERS_0_NAME=local
+      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka_service:9092
+
+    depends_on:
+      - kafka
+
+    networks:
+      - gymnetwork
+
+
+
+  # sendmail:
+  #   container_name: sendmail
+
+  #   build: 
+  #     context: ./microservices/mail
+  #     dockerfile: Dockerfile
+    
+  #   ports:
+  #     - "4003:4003"
+    
+  #   volumes:
+  #     - ./microservices/mail:/app
+
+  #   networks:
+  #     - gymnetwork
+  
+  #   depends_on:
+  #     - gym-databse
+  #     - kafka
+  #     - zookeeper
+
+
+
+
+
+
+
+networks:
+  gymnetwork:
+    driver: bridge

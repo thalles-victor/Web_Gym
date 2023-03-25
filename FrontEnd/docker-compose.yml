@@ -1,0 +1,10 @@
+version: "3"
+
+services:
+  web: 
+    container_name: gym-web
+    build: .
+    volumes:
+      - .:/usr/app
+    ports:
+      - 3001:3001
