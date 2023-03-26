@@ -60,8 +60,6 @@ export class UserService implements OnModuleInit {
       }),
     );
 
-    console.log(result);
-
     if (result.errors !== null) {
       throw new GraphQLError(result.errors);
     }
@@ -74,8 +72,6 @@ export class UserService implements OnModuleInit {
       this.client.send('GET_ALL_ADDRESS_BY_USER_ID', user_id),
     );
 
-    console.log(result);
-
     if (result.errors !== 'null') {
       throw new GraphQLError(result.errors);
     }
@@ -87,8 +83,6 @@ export class UserService implements OnModuleInit {
     const result = await lastValueFrom(
       this.client.send('USER_RECOVER_USER_INFORMATIONS', user_id),
     );
-
-    console.log(result);
 
     if (result.errors !== null) {
       throw new GraphQLError(result.errors);
