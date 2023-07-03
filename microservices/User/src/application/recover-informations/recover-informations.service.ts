@@ -16,6 +16,8 @@ export class RecoverUserInformationsService {
   ) {}
 
   async execute(user_id: string) {
+    console.log('Recover user information', user_id);
+
     const user = await this.userRepository.findOne({
       where: {
         id: user_id,

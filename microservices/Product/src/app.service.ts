@@ -29,6 +29,8 @@ export class AppService {
   }
 
   async getAllProducts(): Promise<ProductEntity[]> {
+    console.log('Todos os produtos');
+
     return await this.productRepository.find();
   }
 

@@ -56,7 +56,7 @@ type Query {
   getOneUserByEmail(email: String!): UserObjType!
   getUserInformations: UserObjType!
   getAllAddressByUserId(user_id: String!): [RegisterAddressObjType!]!
-  recoverUserInformations: UserObjType!
+  recoverUserInformation: UserObjType!
 }
 
 type Mutation {
