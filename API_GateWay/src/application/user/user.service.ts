@@ -79,7 +79,9 @@ export class UserService implements OnModuleInit {
     return result.data;
   }
 
-  async recoverUserInformations(user_id: string) {
+  async recoverUserInformation(user_id: string) {
+    console.log('API_gateway', user_id);
+
     const result = await lastValueFrom(
       this.client.send('USER_RECOVER_USER_INFORMATIONS', user_id),
     );

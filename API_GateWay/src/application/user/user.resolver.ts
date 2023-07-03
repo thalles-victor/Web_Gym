@@ -53,7 +53,7 @@ export class UserResolver {
 
   @UseGuards(GqlAuthGuard)
   @Query(() => UserObjType)
-  async recoverUserInformations(@CurrentUser() paylaod: any) {
-    return this.userService.recoverUserInformations(paylaod.sub);
+  async recoverUserInformation(@CurrentUser() payload: any) {
+    return this.userService.recoverUserInformation(payload.id);
   }
 }

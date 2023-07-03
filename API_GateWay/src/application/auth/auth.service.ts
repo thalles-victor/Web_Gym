@@ -32,8 +32,6 @@ export class AuthService implements OnModuleInit {
       this.kafkaClient.send('VALIDATE_USER_TOPIC', user),
     )) as any;
 
-    console.log(result);
-
     if (result.errors) {
       return null;
     }
@@ -45,8 +43,6 @@ export class AuthService implements OnModuleInit {
     const result = await lastValueFrom(
       this.kafkaClient.send('AUTH_TOPIC', JSON.stringify(user)),
     );
-
-    console.log(result);
 
     if (!result.user) {
       throw new GraphQLError(result.error);
