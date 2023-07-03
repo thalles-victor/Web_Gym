@@ -68,11 +68,14 @@ type Mutation {
 
 input RegisterProductDTO {
   title: String!
-  main_image: String!
-  secondary_images: [String!]!
+  main_image: Upload!
+  secondary_images: [Upload!]!
   description: String!
   price: Float!
 }
+
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload
 
 input RegisterUserInputType {
   name: String!

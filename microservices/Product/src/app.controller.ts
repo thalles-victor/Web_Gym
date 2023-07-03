@@ -14,10 +14,8 @@ export class AppController {
   ) {}
 
   @MessagePattern('PRODUCT_REGISTER_TOPIC')
-  async readReply(@Payload() message: any) {
-    console.log(message);
-
-    return JSON.stringify(await this.appService.createProduct(message.product));
+  async readReply(@Payload() product: any) {
+    return JSON.stringify(await this.appService.createProduct(product));
   }
 
   @MessagePattern('GET_ALL_PRODUCTS')

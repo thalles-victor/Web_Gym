@@ -25,10 +25,10 @@ const signInSchemaForm = zod.object({
 type SignInFormType = zod.infer<typeof signInSchemaForm>;
 
 export function SignIn() {
-  initFirebase();
+  // initFirebase();
   const router = useRouter();
-  const provider = new GoogleAuthProvider();
-  const auth = getAuth();
+  // const provider = new GoogleAuthProvider();
+  // const auth = getAuth();
 
   const {
     register,
@@ -43,8 +43,8 @@ export function SignIn() {
   }
 
   async function signWithGoogle() {
-    const result = await signInWithPopup(auth, provider);
-    console.log(result);
+    // const result = await signInWithPopup(auth, provider);
+    // console.log(result);
   }
 
   return (
